@@ -22,6 +22,8 @@
         </activity>
         <activity android:name=".BuscarNomesMasculinosActivity">
         </activity>
+        <activity android:name=".BuscarNomesFemininosActivity">
+        </activity>
     </application>
 
 </manifest>
