@@ -1,6 +1,9 @@
 package com.example.projeto_nomes.model
 
-class NomePorSexo {
+import java.io.Serializable
+
+
+class NomePorSexo : Serializable{
     public var nome: String? = null
     public var sexo: String? = null
     public var localidade: String? = null
