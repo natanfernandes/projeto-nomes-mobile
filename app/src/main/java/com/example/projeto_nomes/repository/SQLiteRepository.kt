@@ -2,40 +2,39 @@ package com.example.projeto_nomes.repository
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
+import android.util.Log
+import com.example.projeto_nomes.model.NomePorSexo
+import com.example.projeto_nomes.model.Res
 
 class SQLiteRepository(ctx: Context): NomesRepository {
 
-    private  val helper: TweetSqlHelper = TweetSqlHelper(ctx)
+    private  val helper: NomeSQLHelper = NomeSQLHelper(ctx)
 
-    private fun insert(tweet : Tweet){
-
+    private fun insert(nomePorSexo: NomePorSexo){
         val db = helper.writableDatabase
-
         val cv = ContentValues().apply {
-            put(COLUMN_USERNAME, tweet.user?.name)
-            put(COLUMN_CONTENT, tweet.text)
+            put(COLUMN_CONTENT, nomePorSexo.nome)
         }
-
         val id = db.insert(TABLE_NAME, null, cv)
         if (id != -1L){
-            tweet.id = id
+            nomePorSexo.id = id
         }
         db.close()
     }
 
-    private fun update(tweet : Tweet){
+    private fun update(nomePorSexo: NomePorSexo){
         val db = helper.writableDatabase
 
         val cv = ContentValues().apply {
-            put(COLUMN_USERNAME, tweet.user?.name)
-            put(COLUMN_CONTENT, tweet.text)
+            put(COLUMN_CONTENT, nomePorSexo.nome)
         }
 
         db.update(
             TABLE_NAME,
             cv,
             "$COLUMN_ID = ? ",
-            arrayOf(tweet.id.toString())
+            arrayOf(nomePorSexo.id.toString())
         )
 
         db.close()
@@ -43,23 +42,19 @@ class SQLiteRepository(ctx: Context): NomesRepository {
     }
 
 
-    override fun save(tweet : Tweet) {
-        Log.d("identificador", tweet.id.toString())
+    override fun save(nomePorSexo: NomePorSexo) {
+        Log.d("identificador", nomePorSexo.id.toString())
 
-        insert(tweet)
-
-//        }else{
-//            update(tweet)
-//        }
+        insert(nomePorSexo)
     }
 
-    override fun remove(tweet : Tweet) {
+    override fun remove(nomePorSexo: NomePorSexo) {
         val db = helper.writableDatabase
 
         db.delete(
             TABLE_NAME,
             "$COLUMN_ID = ? ",
-            arrayOf(tweet.id.toString())
+            arrayOf(nomePorSexo.id.toString())
         )
 
         db.close()
@@ -74,7 +69,7 @@ class SQLiteRepository(ctx: Context): NomesRepository {
     }
 
 
-    override  fun list(callbacks: (MutableList<Tweet>)->Unit){
+    override  fun list(callbacks: (List<NomePorSexo>)->Unit){
 
         var sql = "SELECT * FROM $TABLE_NAME"
         var args: Array<String>? = null
@@ -82,23 +77,24 @@ class SQLiteRepository(ctx: Context): NomesRepository {
         sql += " ORDER BY $COLUMN_ID"
         val db = helper.readableDatabase
         val cursor = db.rawQuery(sql, args)
-        val tweets = ArrayList<Tweet>()
+        val nomes = ArrayList<NomePorSexo>()
         while (cursor.moveToNext()){
-            val tweet = tweetFromCursor(cursor)
-            tweets.add(tweet)
+            val nomePorSexo = NomeFromCursor(cursor)
+            nomes.add(nomePorSexo)
         }
         cursor.close()
         db.close()
 
-        callbacks(tweets)
+        callbacks(nomes)
     }
 
-    private fun tweetFromCursor(cursor: Cursor): Tweet {
+    private fun NomeFromCursor(cursor: Cursor): NomePorSexo{
         val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
-        val title = cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME))
-        val content = cursor.getString(cursor.getColumnIndex(COLUMN_CONTENT))
+        val nome = cursor.getString(cursor.getColumnIndex(COLUMN_NOME))
+        val sexo = cursor.getString(cursor.getColumnIndex(COLUMN_SEXO))
+        val localidade = cursor.getString(cursor.getColumnIndex(COLUMN_LOCALIDADE))
 
-        return Tweet(title,content,title,title,title, User("1", title, title, title ))
+        return NomePorSexo(id,nome,sexo,localidade)
     }
 
 }
