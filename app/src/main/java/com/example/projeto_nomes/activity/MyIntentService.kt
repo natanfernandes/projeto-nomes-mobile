@@ -12,7 +12,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MyIntentService : IntentService("ServiceTwitter"){
+
+
+class MyIntentService : IntentService("NomePorSexoService"){
 
     private var nomesRepository: SQLiteRepository? = null
 
