@@ -9,12 +9,15 @@ import com.example.projeto_nomes.model.Res
 
 class SQLiteRepository(ctx: Context): NomesRepository {
 
+
+
     private  val helper: NomeSQLHelper = NomeSQLHelper(ctx)
 
     private fun insert(nomePorSexo: NomePorSexo){
+        Log.d("identificador", nomePorSexo.id.toString())
         val db = helper.writableDatabase
         val cv = ContentValues().apply {
-            put(COLUMN_CONTENT, nomePorSexo.nome)
+            put(COLUMN_NOME, nomePorSexo.nome)
         }
         val id = db.insert(TABLE_NAME, null, cv)
         if (id != -1L){
@@ -27,7 +30,7 @@ class SQLiteRepository(ctx: Context): NomesRepository {
         val db = helper.writableDatabase
 
         val cv = ContentValues().apply {
-            put(COLUMN_CONTENT, nomePorSexo.nome)
+            put(COLUMN_NOME, nomePorSexo.nome)
         }
 
         db.update(
@@ -43,7 +46,7 @@ class SQLiteRepository(ctx: Context): NomesRepository {
 
 
     override fun save(nomePorSexo: NomePorSexo) {
-        Log.d("identificador", nomePorSexo.id.toString())
+
 
         insert(nomePorSexo)
     }
@@ -68,9 +71,7 @@ class SQLiteRepository(ctx: Context): NomesRepository {
         db.close()
     }
 
-
-    override  fun list(callbacks: (List<NomePorSexo>)->Unit){
-
+    override fun list(callback: (MutableList<NomePorSexo>) -> Unit) {
         var sql = "SELECT * FROM $TABLE_NAME"
         var args: Array<String>? = null
 
@@ -85,7 +86,7 @@ class SQLiteRepository(ctx: Context): NomesRepository {
         cursor.close()
         db.close()
 
-        callbacks(nomes)
+        callback(nomes)
     }
 
     private fun NomeFromCursor(cursor: Cursor): NomePorSexo{
@@ -94,7 +95,7 @@ class SQLiteRepository(ctx: Context): NomesRepository {
         val sexo = cursor.getString(cursor.getColumnIndex(COLUMN_SEXO))
         val localidade = cursor.getString(cursor.getColumnIndex(COLUMN_LOCALIDADE))
 
-        return NomePorSexo(id,nome,sexo,localidade)
+        return NomePorSexo()
     }
 
 }
