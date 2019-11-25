@@ -1,6 +1,9 @@
 package com.example.projeto_nomes.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,6 +24,8 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.LargeValueFormatter
 import kotlinx.android.synthetic.main.activity_buscar_nomes_femininos.*
+import kotlinx.android.synthetic.main.activity_buscar_nomes_femininos.txtLocalidade
+import kotlinx.android.synthetic.main.activity_buscar_nomes_masculinos.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,71 +35,67 @@ class BuscarNomesMasculinosActivity: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_buscar_nomes_masculinos)
+        nomesRepository = SQLiteRepository(this)
+        val filter = IntentFilter()
+
+        filter.addAction("com.hello.action")
+
+        val updateUIReciver = object : BroadcastReceiver() {
+
+            override fun onReceive(context: Context, intent: Intent) {
+                updateList()
+            }
+        }
+        registerReceiver(updateUIReciver, filter)
     }
 
-    fun getNome (view : View) {
+    fun getNomeMasculino (view : View) {
         val i = Intent(this, MyIntentService::class.java)
-        val nome = nome_feminino_value.text.toString()
+        val nome = nome_masculino_value.text.toString()
         i.putExtra("nome", nome)
         i.putExtra("sexo", "M")
         startService(i)
-        updateList()
     }
-    private fun list(nomes:MutableList<NomePorSexo>){
-        for(nome in nomes){
-            Log.d("teste2",nome.toString())
+
+    private fun list(nomes: NomePorSexo){
+        if(nomes != null) {
+            if (nomes.nome != null && nomes.resStr != null) {
+                Log.d("nome",nomes?.resStr?.toString())
+                populateGraphData(nomes)
+            }
         }
 
     }
+
     fun updateList() {
-        nomesRepository?.list { list(it) }
+        nomesRepository?.list { list(it[0]) }
     }
+
     private fun exibirErro(t:Throwable){
         Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
     }
 
     private fun preencherCampos(nome: List<NomePorSexo>?) {
-//        txtName.text = nome?.get(0)?.nome ?: ""
+        txtNameM.text = nome?.get(0)?.nome ?: ""
         txtLocalidade.text = nome?.get(0)?.localidade ?: ""
     }
-    private fun buscarAssincrono(call: Call<List<NomePorSexo>>) {
 
-        call.enqueue(object : Callback<List<NomePorSexo>> {
-
-            override fun onResponse(call: Call<List<NomePorSexo>>, response: Response<List<NomePorSexo>>) {
-                var nome: List<NomePorSexo>? = response.body();
-                Log.d("nome",nome?.get(0)?.res?.get(0)?.frequencia.toString())
-                if (nome != null) {
-                    populateGraphData(nome.get(0))
-                }
-                preencherCampos(nome)
-            }
-
-            override fun onFailure(call: Call<List<NomePorSexo>>, t: Throwable) {
-
-                exibirErro(t)
-            }
-        })
-    }
     fun populateGraphData(nome: NomePorSexo) {
         var xAxisValues = ArrayList<String>()
         var yValueGroup2 = ArrayList<BarEntry>()
         var aux : Float = 0f
+        var barChartView = findViewById<BarChart>(com.example.projeto_nomes.R.id.graficoMasculino)
+        var freqAux = nome.frequencia?.split(",")
+        var resAux = nome.resStr?.split(",")
 
-        var barChartView = findViewById<BarChart>(R.id.chartConsumptionGraph)
-        for (item in nome.res!!) {
-            Log.d("teste",item.frequencia.toString())
-            var str = item.periodo?.replace("[","")
-            str = str?.replace("]","")
-            if(str != null && str != "1930"){
-                str = str.drop(5)
-                Log.d("teste",str)
+        if (resAux != null && freqAux != null ) {
+            for (i in resAux.indices) {
+                if(resAux[i] != "" && freqAux[i] != ""){
+                    xAxisValues.add(resAux[i])
+                    yValueGroup2.add(BarEntry(aux, freqAux[i].toFloat()))
+                    aux = aux+1f
+                }
             }
-            if (str != null) {
-                xAxisValues.add(str)
-            }
-            yValueGroup2.add(BarEntry(aux, item.frequencia!!.toFloat()))
-            aux = aux+1f
         }
         val barWidth: Float
         val barSpace: Float
@@ -110,7 +111,7 @@ class BuscarNomesMasculinosActivity: AppCompatActivity(){
 
 
         barDataSet2 = BarDataSet(yValueGroup2, "")
-        barDataSet2.setColor(Color.BLUE)
+        barDataSet2.setColor(Color.MAGENTA)
 
         barDataSet2.setDrawIcons(false)
         barDataSet2.setDrawValues(false)
@@ -163,5 +164,6 @@ class BuscarNomesMasculinosActivity: AppCompatActivity(){
         barChartView.data = barData
         barChartView.setVisibleXRange(1f, 9f)
     }
+
 
 }

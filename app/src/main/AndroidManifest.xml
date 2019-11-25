@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".activity.BuscarNomesFemininosActivity">
         </activity>
+        <activity android:name=".activity.RankingPorSexoActivity">
+        </activity>
         <service android:name="com.android.activity.MyIntentService">
         </service>
 

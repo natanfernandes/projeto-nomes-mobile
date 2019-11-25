@@ -64,7 +64,6 @@ class BuscarNomesFemininosActivity : AppCompatActivity(){
         val nome = nome_feminino_value.text.toString()
         i.putExtra("nome", nome)
         i.putExtra("sexo", "F")
-        Log.d("teste2",nome.toString())
         startService(i)
     }
 
@@ -85,28 +84,9 @@ class BuscarNomesFemininosActivity : AppCompatActivity(){
     }
 
     private fun preencherCampos(nome: List<NomePorSexo>?) {
-//        txtName.text = nome?.get(0)?.nome ?: ""
+        txtName.text = nome?.get(0)?.nome ?: ""
         txtLocalidade.text = nome?.get(0)?.localidade ?: ""
     }
-//    private fun buscarAssincrono(call: Call<List<NomePorSexo>>) {
-//
-//        call.enqueue(object : Callback<List<NomePorSexo>> {
-//
-//            override fun onResponse(call: Call<List<NomePorSexo>>, response: Response<List<NomePorSexo>>) {
-//                var nome: List<NomePorSexo>? = response.body();
-//                Log.d("nome",nome?.get(0)?.res?.get(0)?.frequencia.toString())
-//                if (nome != null) {
-//                    populateGraphData(nome.get(0))
-//                }
-//                preencherCampos(nome)
-//            }
-//
-//            override fun onFailure(call: Call<List<NomePorSexo>>, t: Throwable) {
-//
-//                exibirErro(t)
-//            }
-//        })
-//    }
 
     fun populateGraphData(nome: NomePorSexo) {
         var xAxisValues = ArrayList<String>()

@@ -14,15 +14,18 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         buscar_nomes_masculinos.setOnClickListener{
-            Log.d("teste","teste")
             val intent = Intent(this,
                 BuscarNomesMasculinosActivity::class.java)
             startActivity(intent)
         }
         buscar_nomes_femininos.setOnClickListener{
-            Log.d("teste","teste")
             val intent = Intent(this,
                 BuscarNomesFemininosActivity::class.java)
+            startActivity(intent)
+        }
+        ranking_por_sexo.setOnClickListener{
+            val intent = Intent(this,
+                RankingPorSexoActivity::class.java)
             startActivity(intent)
         }
     }
