@@ -11,11 +11,12 @@ class NomeSQLHelper(context: Context):
 
         sqLiteDatabase.execSQL(
             "CREATE TABLE $TABLE_NAME("+
-                    "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, "+
-                    "$COLUMN_NOME NOME," +
-                    "$COLUMN_SEXO SEXO," +
-                    "$COLUMN_LOCALIDADE LOCALIDADE" +
-                    "$COLUMN_RES RES)")
+                    "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                    "$COLUMN_NOME TEXT NOT NULL," +
+                    "$COLUMN_SEXO TEXT NOT NULL," +
+                    "$COLUMN_LOCALIDADE TEXT NOT NULL," +
+                    "$COLUMN_FREQUENCIA TEXT NOT NULL," +
+                    "$COLUMN_RES TEXT NOT NULL)")
     }
 
     override fun onUpgrade(sqLiteDatabase: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

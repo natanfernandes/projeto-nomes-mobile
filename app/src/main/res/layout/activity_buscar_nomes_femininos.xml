@@ -23,28 +23,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Buscar"
-            android:onClick="getNome"></Button>
+            android:onClick="getNomeFeminino"></Button>
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/testName"
-                android:text="Nome:"></TextView>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtName"
-                ></TextView>
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -66,7 +50,7 @@
     </LinearLayout>
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/chartConsumptionGraph"
+        android:id="@+id/graficoFeminino"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="12dp"

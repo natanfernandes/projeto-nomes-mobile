@@ -54,7 +54,7 @@ class BuscarNomesMasculinosActivity: AppCompatActivity(){
     }
 
     private fun preencherCampos(nome: List<NomePorSexo>?) {
-        txtName.text = nome?.get(0)?.nome ?: ""
+//        txtName.text = nome?.get(0)?.nome ?: ""
         txtLocalidade.text = nome?.get(0)?.localidade ?: ""
     }
     private fun buscarAssincrono(call: Call<List<NomePorSexo>>) {

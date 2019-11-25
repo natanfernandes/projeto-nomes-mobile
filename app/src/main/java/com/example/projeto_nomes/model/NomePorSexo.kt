@@ -4,10 +4,12 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 
-class NomePorSexo : Serializable{
-    @SerializedName("id_str") var id: Long = 0
-    public var nome: String? = null
-    public var sexo: String? = null
-    public var localidade: String? = null
+class NomePorSexo(id: Long, nome: String, sexo: String, localidade : String, resStr: String, freq : String) : Serializable{
+    public var id: Long = id
+    public var nome: String? = nome
+    public var sexo: String? = sexo
+    public var localidade: String? = localidade
     public var res: Array<Res>? = null
+    public var resStr: String? = resStr
+    public var frequencia: String? = freq
 }
