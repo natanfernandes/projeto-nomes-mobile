@@ -8,8 +8,6 @@ import com.example.projeto_nomes.model.NomePorSexo
 
 class SQLiteRepository(ctx: Context): NomesRepository {
 
-
-
     private  val helper: NomeSQLHelper = NomeSQLHelper(ctx)
 
     private fun insert(nomePorSexo: NomePorSexo){

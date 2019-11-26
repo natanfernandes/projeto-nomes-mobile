@@ -25,17 +25,12 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.R.attr.name
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
-
-
+import com.example.projeto_nomes.model.RankingSexo
 
 
 class MyIntentService : IntentService("NomePorSexoService"){
 
     private var nomesRepository: SQLiteRepository? = null
-    private val ACTION_STRING_SERVICE = "ToService"
-    private val ACTION_STRING_ACTIVITY = "ToActivity"
 
     override fun onHandleIntent(intent: Intent?) {
 
@@ -73,6 +68,7 @@ class MyIntentService : IntentService("NomePorSexoService"){
             }
         })
     }
+
     private fun exibirErro(t:Throwable){
         Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
     }

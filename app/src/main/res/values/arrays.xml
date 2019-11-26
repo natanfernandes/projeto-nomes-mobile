@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="logos">
+        <item>@drawable/medal</item>
+        <item>@drawable/bronzemedal</item>
+        <item>@drawable/silvermedal</item>
+        <item>@drawable/goldmedal</item>
+    </array>
+
+</resources>

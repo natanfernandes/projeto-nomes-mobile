@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.BuscarNomesFemininosActivity"
+    tools:context=".activity.RankingPorSexoActivity"
     android:background="#FFCC00"
     android:orientation="vertical">
 
@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="end">
+        android:layout_gravity="end"
+        android:id="@+id/listview">
         <Spinner
             android:id="@+id/sexos_spinner"
             android:layout_width="fill_parent"
@@ -25,7 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Buscar"
-            android:onClick="getNomeFeminino"></Button>
+            android:onClick="addMessage"></Button>
     </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMessages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       />
+
+
 
 </LinearLayout>

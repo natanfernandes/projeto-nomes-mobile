@@ -28,6 +28,8 @@
         </activity>
         <service android:name="com.android.activity.MyIntentService">
         </service>
+        <service android:name="com.android.activity.MyIntentService2">
+        </service>
 
     </application>
 

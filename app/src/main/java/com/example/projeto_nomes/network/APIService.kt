@@ -1,6 +1,7 @@
 package com.example.projeto_nomes.network
 
 import com.example.projeto_nomes.model.NomePorSexo
+import com.example.projeto_nomes.model.RankingSexo
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,6 +12,9 @@ import retrofit2.http.Query
 interface APIService {
     @GET("{name}")
     fun buscarNomePorSexo(@Path("name") name:String, @Query("sexo") sex:String):Call<List<NomePorSexo>>
+
+    @GET("ranking/")
+    fun buscarRankingPorSexo(@Query("sexo") sex:String):Call<List<RankingSexo>>
 
     companion object {
         val instance: APIService by lazy {
