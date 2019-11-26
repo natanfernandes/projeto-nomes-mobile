@@ -146,6 +146,7 @@
             app:cardCornerRadius="8dp"
             android:layout_columnWeight="1"
             android:layout_rowWeight="1"
+            android:id="@+id/nome_por_estado"
             >
             <LinearLayout
                 android:layout_width="wrap_content"

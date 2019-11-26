@@ -24,6 +24,7 @@ private  var messages = mutableListOf<Message>()
     private var adapter =
         MessageAdapter(messages, this::onMessageItemClick )
     private var rankRepository: SQLiteRepository2? = null
+    private var updateUIReciver : BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,7 @@ private  var messages = mutableListOf<Message>()
 
         filter.addAction("com.hello.action2")
 
-        val updateUIReciver = object : BroadcastReceiver() {
+        updateUIReciver = object : BroadcastReceiver() {
 
             override fun onReceive(context: Context, intent: Intent) {
                 updateList()
@@ -117,6 +118,11 @@ private  var messages = mutableListOf<Message>()
     fun onMessageItemClick(message: Message){
         val s = "${message.title}\n${message.text}"
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(updateUIReciver)
     }
 
 

@@ -16,6 +16,9 @@ interface APIService {
     @GET("ranking/")
     fun buscarRankingPorSexo(@Query("sexo") sex:String):Call<List<RankingSexo>>
 
+    @GET("{name}")
+    fun buscarNomePorLocalidade(@Path("name") name:String, @Query("localidade") localidade:String):Call<List<NomePorSexo>>
+
     companion object {
         val instance: APIService by lazy {
             val retrofit = Retrofit.Builder()

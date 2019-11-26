@@ -11,7 +11,6 @@ class SQLiteRepository(ctx: Context): NomesRepository {
     private  val helper: NomeSQLHelper = NomeSQLHelper(ctx)
 
     private fun insert(nomePorSexo: NomePorSexo){
-        Log.d("identificador", nomePorSexo.id.toString())
         val db = helper.writableDatabase
         val cv = ContentValues().apply {
             put(COLUMN_NOME, nomePorSexo.nome)
@@ -20,7 +19,6 @@ class SQLiteRepository(ctx: Context): NomesRepository {
             val builder = StringBuilder()
             val freq = StringBuilder()
             for (item in nomePorSexo.res!!) {
-                Log.d("teste",item.frequencia.toString())
                 var str = item.periodo?.replace("[","")
                 str = str?.replace("]","")
                 if(str != null && str != "1930"){
@@ -108,10 +106,13 @@ class SQLiteRepository(ctx: Context): NomesRepository {
     private fun NomeFromCursor(cursor: Cursor): NomePorSexo{
         val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
         val nome = cursor.getString(cursor.getColumnIndex(COLUMN_NOME))
-        val sexo = cursor.getString(cursor.getColumnIndex(COLUMN_SEXO))
+        var sexo = cursor.getString(cursor.getColumnIndex(COLUMN_SEXO))
         val localidade = cursor.getString(cursor.getColumnIndex(COLUMN_LOCALIDADE))
         val res = cursor.getString(cursor.getColumnIndex(COLUMN_RES))
         val freq = cursor.getString(cursor.getColumnIndex(COLUMN_FREQUENCIA))
+        if(sexo == null){
+            sexo = "M"
+        }
         return NomePorSexo(id,nome,sexo,localidade, res, freq)
     }
 

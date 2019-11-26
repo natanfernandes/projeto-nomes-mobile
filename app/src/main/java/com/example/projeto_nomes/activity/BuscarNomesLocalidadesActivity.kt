@@ -9,13 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.android.activity.MyIntentService
-import com.example.projeto_nomes.R
+import com.android.activity.MyIntentService3
+import com.android.activity.MyIntentService4
+import com.example.projeto_nomes.model.Localidade
 import com.example.projeto_nomes.model.NomePorSexo
-import com.example.projeto_nomes.repository.SQLiteRepository
+import com.example.projeto_nomes.repository.SQLiteRepository3
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -23,54 +25,92 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.LargeValueFormatter
-import kotlinx.android.synthetic.main.activity_buscar_nomes_femininos.*
 import kotlinx.android.synthetic.main.activity_buscar_nomes_femininos.txtLocalidade
 import kotlinx.android.synthetic.main.activity_buscar_nomes_masculinos.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.projeto_nomes.repository.SQLiteRepository
+import kotlinx.android.synthetic.main.activity_buscar_nomes_localidades.*
 
-class BuscarNomesMasculinosActivity: AppCompatActivity(){
+
+class BuscarNomesLocalidadesActivity: AppCompatActivity(){
+    private var localidadeRepository: SQLiteRepository3? = null
     private var nomesRepository: SQLiteRepository? = null
+    var updateUIReciver : BroadcastReceiver? = null
+    var updateUIReciver2 : BroadcastReceiver? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_buscar_nomes_masculinos)
+        setContentView(com.example.projeto_nomes.R.layout.activity_buscar_nomes_localidades)
+
+        localidadeRepository = SQLiteRepository3(this)
         nomesRepository = SQLiteRepository(this)
         val filter = IntentFilter()
+        filter.addAction("getLocalidades")
+        val filter2 = IntentFilter()
+        filter2.addAction("getNome")
 
-        filter.addAction("com.hello.action")
 
-        val updateUIReciver = object : BroadcastReceiver() {
+
+        updateUIReciver = object : BroadcastReceiver() {
 
             override fun onReceive(context: Context, intent: Intent) {
                 updateList()
             }
         }
-        registerReceiver(updateUIReciver, filter)
-    }
+        updateUIReciver2 = object : BroadcastReceiver() {
 
-    fun getNomeMasculino (view : View) {
-        val i = Intent(this, MyIntentService::class.java)
-        val nome = nome_masculino_value.text.toString()
-        i.putExtra("nome", nome)
-        i.putExtra("sexo", "M")
-        i.putExtra("act",2)
+            override fun onReceive(context: Context, intent: Intent) {
+                updateNome()
+            }
+        }
+        registerReceiver(updateUIReciver, filter)
+        registerReceiver(updateUIReciver2, filter2)
+        val i = Intent(this, MyIntentService3::class.java)
         startService(i)
     }
 
-    private fun list(nomes: NomePorSexo){
+    fun getNomeLocalidade (view : View) {
+        var text : String = localidades_spinner.getSelectedItem().toString()
+        val i = Intent(this, MyIntentService4::class.java)
+        val text_id = text.split(" - ")[0]
+        val nome = nome_localidade_value.text.toString()
+        i.putExtra("nome", nome)
+        i.putExtra("sexo", "M")
+        i.putExtra("localidade", text_id)
+        i.putExtra("act",1)
+        startService(i)
+    }
+
+    private fun list(nomes: MutableList<Localidade>){
+        val mylist = ArrayList<String>()
+        for(item in nomes) {
+            Log.d("teste",item.toString())
+            mylist.add(item.id_local + " - " + item.nome)
+        }
+        val spinner: Spinner = findViewById(com.example.projeto_nomes.R.id.localidades_spinner)
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        var adapter  = ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, mylist);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
+    fun updateList() {
+        localidadeRepository?.list { list(it) }
+    }
+
+    fun updateNome() {
+        nomesRepository?.list { listNome(it[0]) }
+    }
+    private fun listNome(nomes: NomePorSexo){
         if(nomes != null) {
-            if (nomes.nome != null && nomes.resStr != null) {
-                Log.d("nome",nomes?.resStr?.toString())
-                populateGraphData(nomes)
+            val teste = nomes
+            if (teste.nome != null && teste.resStr != null) {
+                Log.d("nome",teste?.resStr?.toString())
+                populateGraphData(teste)
             }
         }
 
     }
 
-    fun updateList() {
-        nomesRepository?.list { list(it[0]) }
-    }
 
     private fun exibirErro(t:Throwable){
         Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
@@ -85,7 +125,7 @@ class BuscarNomesMasculinosActivity: AppCompatActivity(){
         var xAxisValues = ArrayList<String>()
         var yValueGroup2 = ArrayList<BarEntry>()
         var aux : Float = 0f
-        var barChartView = findViewById<BarChart>(com.example.projeto_nomes.R.id.graficoMasculino)
+        var barChartView = findViewById<BarChart>(com.example.projeto_nomes.R.id.graficoLocalidades)
         var freqAux = nome.frequencia?.split(",")
         var resAux = nome.resStr?.split(",")
 
@@ -166,5 +206,9 @@ class BuscarNomesMasculinosActivity: AppCompatActivity(){
         barChartView.setVisibleXRange(1f, 9f)
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(updateUIReciver)
+        unregisterReceiver(updateUIReciver2)
+    }
 }

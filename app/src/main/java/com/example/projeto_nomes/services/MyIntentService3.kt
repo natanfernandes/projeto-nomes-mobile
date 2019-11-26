@@ -25,48 +25,48 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.R.attr.name
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import com.example.projeto_nomes.model.Localidade
 import com.example.projeto_nomes.model.RankingSexo
+import com.example.projeto_nomes.network.APILocalidadeService
+import com.example.projeto_nomes.repository.SQLiteRepository2
+import com.example.projeto_nomes.repository.SQLiteRepository3
 
 
-class MyIntentService : IntentService("NomePorSexoService"){
+class MyIntentService3 : IntentService("LocalidadesService"){
 
-    private var nomesRepository: SQLiteRepository? = null
+    private var localidadeRepository: SQLiteRepository3? = null
 
     override fun onHandleIntent(intent: Intent?) {
 
-        nomesRepository = SQLiteRepository(this)
+        localidadeRepository = SQLiteRepository3(this)
 
-        var strUser: String = intent!!.getStringExtra("nome")
-        var strSexo: String = intent!!.getStringExtra("sexo")
-
-        getData(strUser, strSexo)
+        getLocalidades()
     }
 
-    private fun getData(nome: String, sexo: String) {
+    private fun getLocalidades() {
 
-        nomesRepository?.cleanTables()
+        localidadeRepository?.cleanTables()
 
-        val searchCall = APIService.instance.buscarNomePorSexo(nome,sexo)
-        searchCall.enqueue(object : Callback<List<NomePorSexo>> {
-            override fun onResponse(call: Call<List<NomePorSexo>>, response: Response<List<NomePorSexo>>) {
+        val searchCall = APILocalidadeService.instance.buscarLocalidades()
+        searchCall.enqueue(object : Callback<List<Localidade>> {
+            override fun onResponse(call: Call<List<Localidade>>, response: Response<List<Localidade>>) {
                 val nomes = response.body()
-                for (nome in nomes!! ){
-                    nomesRepository?.save(nome)
-                }
+
+                localidadeRepository?.save(nomes)
+
                 val local = Intent()
 
-                local.action = "com.hello.action"
+                local.action = "getLocalidades"
 
                 sendBroadcast(local)
             }
 
-            override fun onFailure(call: Call<List<NomePorSexo>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Localidade>>, t: Throwable) {
                 exibirErro(t)
 
             }
         })
     }
-
     private fun exibirErro(t:Throwable){
         Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
     }

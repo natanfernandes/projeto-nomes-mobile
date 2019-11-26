@@ -64,6 +64,7 @@ class BuscarNomesFemininosActivity : AppCompatActivity(){
         val nome = nome_feminino_value.text.toString()
         i.putExtra("nome", nome)
         i.putExtra("sexo", "F")
+        i.putExtra("act",2)
         startService(i)
     }
 

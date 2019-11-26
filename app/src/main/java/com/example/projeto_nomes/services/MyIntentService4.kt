@@ -28,7 +28,7 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import com.example.projeto_nomes.model.RankingSexo
 
 
-class MyIntentService : IntentService("NomePorSexoService"){
+class MyIntentService4 : IntentService("NomePorLocalidadeService"){
 
     private var nomesRepository: SQLiteRepository? = null
 
@@ -37,16 +37,18 @@ class MyIntentService : IntentService("NomePorSexoService"){
         nomesRepository = SQLiteRepository(this)
 
         var strUser: String = intent!!.getStringExtra("nome")
-        var strSexo: String = intent!!.getStringExtra("sexo")
+        var strLocal: String = intent!!.getStringExtra("localidade")
 
-        getData(strUser, strSexo)
+
+
+        getDataLocalidade(strUser,strLocal)
     }
 
-    private fun getData(nome: String, sexo: String) {
+    private fun getDataLocalidade(nome: String, localidade: String) {
 
         nomesRepository?.cleanTables()
 
-        val searchCall = APIService.instance.buscarNomePorSexo(nome,sexo)
+        val searchCall = APIService.instance.buscarNomePorLocalidade(nome,localidade)
         searchCall.enqueue(object : Callback<List<NomePorSexo>> {
             override fun onResponse(call: Call<List<NomePorSexo>>, response: Response<List<NomePorSexo>>) {
                 val nomes = response.body()
@@ -55,7 +57,7 @@ class MyIntentService : IntentService("NomePorSexoService"){
                 }
                 val local = Intent()
 
-                local.action = "com.hello.action"
+                local.action = "getNome"
 
                 sendBroadcast(local)
             }

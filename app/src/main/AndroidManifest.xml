@@ -26,9 +26,15 @@
         </activity>
         <activity android:name=".activity.RankingPorSexoActivity">
         </activity>
+        <activity android:name=".activity.BuscarNomesLocalidadesActivity">
+        </activity>
         <service android:name="com.android.activity.MyIntentService">
         </service>
         <service android:name="com.android.activity.MyIntentService2">
+        </service>
+        <service android:name="com.android.activity.MyIntentService3">
+        </service>
+        <service android:name="com.android.activity.MyIntentService4">
         </service>
 
     </application>

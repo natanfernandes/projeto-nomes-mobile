@@ -6,4 +6,7 @@
         <item>Masculino</item>
         <item>Feminino</item>
     </string-array>
+    <string-array name="localidades_array">
+        <item>Sem localidades...</item>
+    </string-array>
 </resources>

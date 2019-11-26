@@ -28,5 +28,10 @@ class HomeActivity : AppCompatActivity() {
                 RankingPorSexoActivity::class.java)
             startActivity(intent)
         }
+        nome_por_estado.setOnClickListener{
+            val intent = Intent(this,
+                BuscarNomesLocalidadesActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
